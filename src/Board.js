@@ -79,12 +79,26 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // get row from board
+      var row = this.get(rowIndex);
+      var counter = 0;
+      // for each el in row at rowIndex
+      row.forEach(function(el) {
+        if (el) {
+          counter++;
+        }
+      });
+      return counter > 1 ? true : false; // return hasRowConflictAt
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      for (var i = 0; i < this.rows().length; i++) {
+        if (this.hasRowConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -94,11 +108,27 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      // get rows from board
+      var board = this.rows();
+      var counter = 0;
+      //for each row
+      board.forEach(function(row) {
+        // if el at colIndex has conflict
+        if (row[colIndex]) {
+          // increase counter
+          counter++;
+        }
+      });
+      return counter > 1 ? true : false; // fixme
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      for (var i = 0; i < this.rows().length; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
@@ -109,11 +139,39 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      // get board array
+      var board = this.rows();
+      var columnIndex = majorDiagonalColumnIndexAtFirstRow;
+      var topHalfCounter = 0;
+      var bottomHalfCounter = 0;
+
+      // for each columnIndex, when i increase, look for i + columnIndex
+      for (var i = 0; i < board.length - columnIndex; i++) {
+        if (board[i] && board[i][columnIndex + i]) {
+          topHalfCounter++;
+        }
+      }
+
+      // skip columnIndex = 0 to avoid duplicates
+      if (columnIndex > 0) {
+        // for bottom half of the board, row increase columnIndex + j, column increase j
+        for (var j = 0; j < board.length - columnIndex; j++) {
+          if (board[columnIndex + j][j]) {
+            bottomHalfCounter++;
+          }
+        }
+      }
+
+      return topHalfCounter > 1 || bottomHalfCounter > 1 ? true : false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      for (var i = 0; i < this.rows().length; i++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
@@ -124,11 +182,35 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var board = this.rows();
+      var columnIndex = minorDiagonalColumnIndexAtFirstRow;
+      var topHalfCounter = 0;
+      var bottomHalfCounter = 0;
+
+      for (var i = 0; i <= columnIndex; i++) {
+        if (board[i] && board[i][columnIndex - i]) {
+          topHalfCounter++;
+        }
+      }
+
+      if (columnIndex > 0) {
+        for (var j = 0; j < board.length - columnIndex; j++) {
+          if (board[columnIndex + j][board.length - 1 - j]) {
+            bottomHalfCounter++;
+          }
+        }
+      }
+
+      return topHalfCounter > 1 || bottomHalfCounter > 1 ? true : false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+      for (var i = 0; i < this.rows().length; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
       return false; // fixme
     }
 
